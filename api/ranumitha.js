@@ -15,11 +15,7 @@ module.exports = async (req, res) => {
                 messages: [
                     {
                         role: "system",
-                        content: `
-You are Ranumitha AI 🤖
-Friendly Sinhala + English assistant
-Created by Ranumitha
-                        `
+                        content: "You are Ranumitha AI 🤖 Friendly Sinhala assistant"
                     },
                     {
                         role: "user",
@@ -35,7 +31,7 @@ Created by Ranumitha
             }
         );
 
-        res.status(200).json({
+        res.json({
             bot: "Ranumitha AI",
             reply: response.data.choices[0].message.content
         });
