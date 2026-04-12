@@ -1,15 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/ranumitha.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/ranumitha",
-      "dest": "api/ranumitha.js"
+      "dest": "/api/ranumitha.js"
     }
   ]
 }
