@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ranumitha AI Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body style="font-family:Arial;text-align:center">
+
+<h2>🤖 Ranumitha AI</h2>
+
+<input id="msg" placeholder="Type message..." />
+<button onclick="send()">Send</button>
+
+<p id="reply"></p>
+
+<script>
+async function send(){
+  let msg = document.getElementById("msg").value;
+
+  let res = await fetch("/api/ranumitha", {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ message: msg })
+  });
+
+  let data = await res.json();
+  document.getElementById("reply").innerText = data.reply || data.error;
+}
+</script>
+
+</body>
+</html>
