@@ -2,7 +2,15 @@ const axios = require("axios");
 
 module.exports = async (req, res) => {
     try {
-        const msg = req.body.message;
+
+        // 🔥 FIX: body safe parse
+        let body = req.body;
+
+        if (typeof body === "string") {
+            body = JSON.parse(body);
+        }
+
+        const msg = body?.message;
 
         if (!msg) {
             return res.status(400).json({ error: "Message required" });
@@ -15,7 +23,7 @@ module.exports = async (req, res) => {
                 messages: [
                     {
                         role: "system",
-                        content: "You are Ranumitha AI 🤖 Friendly Sinhala assistant"
+                        content: "You are Ranumitha AI 🤖 friendly assistant"
                     },
                     {
                         role: "user",
@@ -37,6 +45,11 @@ module.exports = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(500).json({ error: "Server error" });
+        console.log("ERROR:", err.response?.data || err.message);
+
+        res.status(500).json({
+            error: "Server error",
+            detail: err.response?.data || err.message
+        });
     }
 };
