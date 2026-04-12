@@ -1,17 +1,11 @@
-const express = require("express");
 const axios = require("axios");
-require("dotenv").config();
 
-const app = express();
-app.use(express.json());
-
-// 🔥 Ranumitha AI API
-app.post("/ranumitha", async (req, res) => {
+module.exports = async (req, res) => {
     try {
         const msg = req.body.message;
 
         if (!msg) {
-            return res.json({ error: "Message required" });
+            return res.status(400).json({ error: "Message required" });
         }
 
         const response = await axios.post(
@@ -23,9 +17,8 @@ app.post("/ranumitha", async (req, res) => {
                         role: "system",
                         content: `
 You are Ranumitha AI 🤖
-- Friendly Sinhala + English mix
-- Helpful assistant
-- Created by Ranumitha
+Friendly Sinhala + English assistant
+Created by Ranumitha
                         `
                     },
                     {
@@ -42,18 +35,12 @@ You are Ranumitha AI 🤖
             }
         );
 
-        res.json({
+        res.status(200).json({
             bot: "Ranumitha AI",
             reply: response.data.choices[0].message.content
         });
 
     } catch (err) {
-        console.log(err.message);
-        res.json({ error: "Server error" });
+        res.status(500).json({ error: "Server error" });
     }
-});
-
-// 🔥 PORT
-app.listen(process.env.PORT || 3000, () => {
-    console.log("Ranumitha AI running...");
-});
+};
