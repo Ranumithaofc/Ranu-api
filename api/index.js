@@ -17,23 +17,23 @@ module.exports = async (req, res) => {
 
         const apiKey = "AIzaSyCU-BKB-THuDnW3I92QRXQm5sQShkJ140E";
         
-        // මෙහිදී අපි v1 version එක සහ gemini-pro මාදිලිය භාවිතා කරමු
-        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`;
+        // අලුත්ම සහ වඩාත්ම ස්ථාවර Endpoint එක (Gemini 2.0 Flash)
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `You are Ranumitha-AI, a professional assistant created by Hiruka Ranumitha. Answer: ${text}` }]
+                    parts: [{ text: `Your name is Ranumitha-AI, created by Hiruka Ranumitha. Answer this: ${text}` }]
                 }]
             })
         });
 
         const data = await response.json();
 
-        // Error එකක් ආවොත් ඒක හරියටම බලාගන්න මේක උදව් වෙනවා
         if (data.error) {
+            // Error එකක් ආවොත් ඒක UI එකේ පෙන්වන්න
             return res.status(500).json({ status: false, reply: "API Error: " + data.error.message });
         }
 
@@ -45,7 +45,7 @@ module.exports = async (req, res) => {
                 reply: aiReply 
             });
         } else {
-            return res.status(500).json({ status: false, reply: "Unexpected API response format." });
+            return res.status(500).json({ status: false, reply: "නොදන්නා දෝෂයක් සිදුවිය." });
         }
 
     } catch (error) {
