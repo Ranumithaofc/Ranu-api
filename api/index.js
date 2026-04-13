@@ -1,5 +1,3 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
 module.exports = async (req, res) => {
     // CORS Settings
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -18,29 +16,38 @@ module.exports = async (req, res) => {
         const { text } = req.body;
         if (!text) return res.status(400).json({ reply: "ප්‍රශ්නයක් ඇතුළත් කරන්න." });
 
-        // ඔබ ලබාදුන් API Key එක
-        const genAI = new GoogleGenerativeAI("AIzaSyCU-BKB-THuDnW3I92QRXQm5sQShkJ140E");
-        
-        // වඩාත්ම ස්ථාවර Model එක
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const apiKey = "AIzaSyCU-BKB-THuDnW3I92QRXQm5sQShkJ140E";
+        // කෙලින්ම Google API එකට Request එක යවන URL එක
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        const prompt = `Your name is Ranumitha-AI. You are a helpful AI assistant developed by Hiruka Ranumitha. Answer this: ${text}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{ text: `Your name is Ranumitha-AI. You are a professional assistant created by Hiruka Ranumitha. Question: ${text}` }]
+                }]
+            })
+        });
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const output = response.text();
+        const data = await response.json();
+
+        if (data.error) {
+            return res.status(500).json({ status: false, reply: "API Error: " + data.error.message });
+        }
+
+        const aiReply = data.candidates[0].content.parts[0].text;
         
         return res.status(200).json({ 
             status: true, 
             creator: "Ranumitha",
-            reply: output 
+            reply: aiReply 
         });
 
     } catch (error) {
-        console.error(error);
         return res.status(500).json({ 
             status: false, 
-            reply: "AI Error: " + error.message 
+            reply: "Server Error: " + error.message 
         });
     }
 };
