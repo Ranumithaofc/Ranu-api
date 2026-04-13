@@ -11,18 +11,18 @@ module.exports = async (req, res) => {
 
     try {
         const { text } = req.body;
-        if (!text) return res.status(400).json({ reply: "Ask me something!" });
+        if (!text) return res.status(400).json({ reply: "Please send a message." });
 
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        // ඔබේ API Key එක මෙතනට කෙලින්ම ලබා දෙන්න
+        const API_KEY = "AIzaSyCU-BKB-THuDnW3I92QRXQm5sQShkJ140E"; 
+        const genAI = new GoogleGenerativeAI(API_KEY);
         
-        // Model එක මෙසේ නිවැරදිව ඇතුළත් කරන්න
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const result = await model.generateContent(`Your name is Ranumitha-AI. Creator: Ranumitha. Answer: ${text}`);
         const response = await result.response;
-        const output = response.text();
         
-        res.status(200).json({ status: true, reply: output });
+        res.status(200).json({ status: true, reply: response.text() });
 
     } catch (error) {
         res.status(500).json({ status: false, reply: "AI Error: " + error.message });
