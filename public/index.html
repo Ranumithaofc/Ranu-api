@@ -1,31 +1,35 @@
 <script>
-    async function askAI() {
-        const input = document.getElementById('userInput').value;
-        const replyBox = document.getElementById('responseBox');
-        const replyText = document.getElementById('aiReply');
-        const btn = document.getElementById('btn');
+async function askAI() {
+    const input = document.getElementById('userInput').value;
+    const replyBox = document.getElementById('responseBox');
+    const replyText = document.getElementById('aiReply');
+    const btn = document.getElementById('btn');
 
-        if (!input) return alert("Please enter a message!");
+    if (!input) return alert("Please enter a message!");
 
-        btn.innerText = "Processing...";
-        btn.disabled = true;
+    btn.innerText = "Processing...";
+    btn.disabled = true;
 
-        try {
-            const response = await fetch('/api/chat', {  // ✅ FIXED
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: input }) // ✅ backend match
-            });
+    try {
+        const response = await fetch('/api/chat', { // ✅ FIXED
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: input }) // ✅ FIXED
+        });
 
-            const data = await response.json();
+        const data = await response.json();
 
-            replyBox.classList.remove('hidden');
-            replyText.innerText = data.reply || "Error: No response from AI.";
-        } catch (error) {
-            alert("Something went wrong!");
-        } finally {
-            btn.innerText = "Send Request";
-            btn.disabled = false;
-        }
+        replyBox.classList.remove('hidden');
+        replyText.innerText = data.reply || "No response from AI";
+
+    } catch (error) {
+        console.log(error);
+        alert("Error connecting to API!");
     }
+
+    btn.innerText = "Send Request";
+    btn.disabled = false;
+}
 </script>
