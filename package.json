@@ -1,16 +1,7 @@
 {
-  "name": "ranumitha-ai-api",
+  "name": "gemini-api",
   "version": "1.0.0",
-  "description": "Ranumitha-AI API using Gemini Pro",
-  "main": "api/index.js",
-  "scripts": {
-    "start": "node api/index.js"
-  },
   "dependencies": {
-    "@google/generative-ai": "^0.11.4",
-    "express": "^4.19.2"
-  },
-  "engines": {
-    "node": "22.x"
+    "@google/generative-ai": "^0.17.0"
   }
 }
